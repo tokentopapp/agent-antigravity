@@ -214,7 +214,7 @@ export async function parseSessionsFromProjects(
   let aggregateCacheMisses = 0;
 
   for (const file of sessionFiles) {
-    const cached = sessionAggregateCache.get(file.sessionId);
+    const cached = sessionAggregateCache.get(file.filePath);
     if (cached && cached.updatedAt === file.mtimeMs) {
       cached.lastAccessed = now;
       aggregateCacheHits++;
@@ -228,8 +228,15 @@ export async function parseSessionsFromProjects(
     if (!sessionData || !isValidSessionFile(sessionData)) continue;
 
     const usageRows = parseSessionFileRows(sessionData, file.mtimeMs);
+    const projectPath = file.filePath.split('/chats/')[0] ?? file.filePath;
+    const sessionName = path.basename(file.filePath, '.json');
 
-    sessionAggregateCache.set(file.sessionId, {
+    for (const row of usageRows) {
+      row.projectPath = projectPath;
+      row.sessionName = sessionName;
+    }
+
+    sessionAggregateCache.set(file.filePath, {
       updatedAt: file.mtimeMs,
       usageRows,
       lastAccessed: now,
