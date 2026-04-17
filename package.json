@@ -54,7 +54,7 @@
   "devDependencies": {
     "@tokentop/plugin-sdk": "^1.0.1",
     "@types/bun": "latest",
-    "typescript": "^5.7.0"
+    "typescript": "^6.0.0"
   },
   "dependencies": {
     "@tokentop/agent-gemini": "^1.0.0"
